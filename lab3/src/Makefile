@@ -4,6 +4,9 @@ CODE_DIR = test_codes
 CODES = $(wildcard ${CODE_DIR}/*.sy)
 OUTPUT_DIR = output
 
+CC = g++
+CFLAGS = -std=c++17 -DASSEMBLE_OUTPUT -DTREE_OUTPUT -Wno-write-strings -Wno-unused-result -O2 -g
+
 lex.yy.c: lex.l
 	flex --noyywrap lex.l
 
@@ -11,7 +14,7 @@ y.tab.c y.tab.h: syntax.y
 	yacc -d -Wcounterexamples syntax.y
 
 parser: lex.yy.c y.tab.c y.tab.h common.hpp common.cpp compiler.hpp
-	g++ -std=c++17 -DASSEMBLE_OUTPUT -DTREE_OUTPUT -Wno-write-strings -O0 -g y.tab.c lex.yy.c common.cpp -o parser
+	${CC} ${CFLAGS} y.tab.c lex.yy.c common.cpp -o parser
 
 test:
 	@if [ ! -d ${OUTPUT_DIR} ]; then mkdir ${OUTPUT_DIR}; fi

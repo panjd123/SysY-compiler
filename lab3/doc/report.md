@@ -6,14 +6,27 @@
 - 完整支持各类运算，包括算术运算和逻辑运算
 - 支持 if-else/while 语句
 - 支持多层 break/continue
-- 支持函数(递归)调用，支持传递变量，传递数组，传递部分数组作为参数
+- 支持函数(递归)调用
+- 支持函数参数传递变量
+- 支持函数参数传递数组
+- 支持函数参数传递部分数组（例如传递 `x[2][3][4]` 的 `x[1]` 到 `p[][4]`）
+- 支持函数参数传递常数组为实参到数组形参上，不进行类型转换保护（同 C 语言），不允许函数形参为常数组（同 sysY 定义）
 - 支持比较复杂的数组定义，比如 `int b[2][N*2]={1+1, a[1][0] * a[0][1]}` 其中 `a` 是常数组
-- 支持就近原则的符号表，支持变量和函数重名（如 sysY 定义）
-- 已知唯一不支持的是复杂的初值列表，比如 `{{1,2}, {3,4}}`，这个比较繁琐所以没有实现。
+- 支持就近原则的符号表
+- 支持变量和函数重名（同 sysY 定义中所述）
+- 不支持复杂的初值列表，比如 `{{1,2}, {3,4}}`，这个比较繁琐所以没有实现
+
+以上，除了最后一点细节，基本完整地实现了 sysY。
 
 ## 设计思路
 
 本阶段有两类难点，一类是语义翻译设计，一类是编写汇编代码。以下将交叉讨论。
+
+### 基本构思
+
+每个节点的内容都在栈上开辟一个临时空间存储，操作时移动到 `r8`,`r9` 这两个比较安全的无关的寄存器上，操作结束后再存回去。
+
+临时空间在每个 BLOCK 结束时才释放。
 
 ### 节点的数据结构
 
@@ -265,6 +278,31 @@ $$->offsetInArray = offset;
 
 以上代码即实现了累乘后缀积，再乘上当前维度的下标累加到偏移量上。
 
+### LVal 中变量的访问和记录方法
+
+同上，不再赘述。
+
+```
+ IDENT {
+$$=newNode(L_VAL_TYPE);
+addChildren($$, $1);
+     // $$->text = $1->text;
+     strcpy($$->text, $1->text);
+     if(!isVarInTable($1->text)){
+         yyerror("Reference Undefined Variable");
+     }else{
+         auto [depth, var] = getVar($1->text);
+         $$->isGlobal = var.isGlobal;
+         if(var.type == ConstInt){
+             $$->isConst = true;
+             $$->value = var.value;
+         }else{
+             $$->offset = var.offset;
+         }
+     }
+}
+ ```
+
 ### 定义函数
 
 以以下语法为例
@@ -385,15 +423,140 @@ if(func.type == FuncInt){
 
 ### if-else
 
-事实上，这里只需要照抄 PPT 或者其他语义翻译的样板即可。
+其中的大部分核心内容只需要借鉴 PPT 或者现有的语义翻译样板即可，用到的主要是回填技术。
+
+唯一值得注意的是关于临时变量（比如 Cond 中产生的）的空间回收，
+这里 `EnterStmt` 和 `ExitStmt` 分别起到记录当前的 `offset`，压入符号表以及还原的作用，事实上，更符合 C 的做法是
+在整个 `IF` 的外部加上 `EnterStmt` 和 `ExitStmt`，但是这样会导致意料之外的语法冲突。以下的实现的本质是第一层 IF 是被视为当前
+活跃的栈帧的一部分，下一层开始才涉及到回收等。
 
 ```
-IF LEFTP Cond RIGHTP NewLabel EnterStmt Stmt ExitStmt ELSE AfterElse NewLabel EnterStmt Stmt ExitStmtNewLabel %prec ELSEX {
+| IF LEFTP Cond RIGHTP NewLabel EnterStmt Stmt ExitStmt %prec IFX { // EnterStmtand ExitStmt has no effect, but can solve conflict
+    $$=newNode(STMT_TYPE);
+    addChildren($$, $1, $2, $3, $4, $7);
+    assemble.backpatch($3->trueList, $5->quad);
+    int end = assemble.newLabel();
+    assemble.backpatch($3->falseList, end);
+}
+| IF LEFTP Cond RIGHTP NewLabel EnterStmt Stmt ExitStmt ELSE AfterElse NewLabelEnterStmt Stmt ExitStmt NewLabel %prec ELSEX {
     $$=newNode(STMT_TYPE);
     addChildren($$, $1, $2, $3, $4, $7, $9, $13);
     assemble.backpatch($3->trueList, $5->quad);
     assemble.backpatch($3->falseList, $11->quad);
     assemble.backpatch($10->trueList, $15->quad);
+}
+```
+
+### while
+
+while 略有不同，最主要的问题在于如果仍然沿用 if 的结构，Cond 中的临时变量会被反复创建，所以需要在进入 While 前记录当前的 offset，然后在 `ExitWhile` 即退出判断时立刻回收。事实上 if 也可以用类似的结构。
+
+如果用三地址等方法可以更好地优化这部分代码，比如不需要反复移动栈指针等。
+
+比较特别地，我们还需要给 break 和 continue 进行回填，因为 while 之间天然构成栈的结构，所以用全局的栈维护当前要回填的位置集，这样代码比较简单。具体方法即： break 的位置，回填到 while 结束的位置，continue 的位置，回填到 while 开始的位置。同时，二者都需要还原栈。
+
+```
+| WHILE EnterWhile EnterStmt LEFTP Cond RIGHTP ExitWhile NewLabel Stmt ExitStmt {
+  $$=newNode(STMT_TYPE);
+  addChildren($$, $1, $4, $5, $6, $9);
+  assemble.backpatch($5->trueList, $8->quad);
+  assemble.append("\tjmp\t.L%d\n", $2->quad);
+  int whileEnd = assemble.newLabel();
+  assemble.comment("while end");
+  assemble.backpatch($5->falseList, $7->quad);
+  assemble.backpatch($7->trueList, whileEnd);
+  for(auto [line, of]: breakStack.back()){
+      sprintf(tmp, "\taddq\t$%d, %%rsp\n", offset - of);
+      assemble[line - 1] = tmp; 
+      assemble[line] += to_string(whileEnd) + "\n";
+  }
+  breakStack.pop_back();
+  for(auto [line, of]: continueStack.back()){
+      sprintf(tmp, "\taddq\t$%d, %%rsp\n", offset - of);
+      assemble[line - 1] = tmp; 
+      assemble[line] += to_string($2->quad) + "\n";
+  }
+  continueStack.pop_back();
+}
+```
+
+```
+| BREAK SEMI {
+  $$=newNode(STMT_TYPE);
+  addChildren($$, $1, $2);
+  assemble.append("");
+  assemble.append("\tjmp\t.L");
+  breakStack.back().push_back({assemble.line, offset});
+}
+| CONTINUE SEMI {
+  $$=newNode(STMT_TYPE);
+  addChildren($$, $1, $2);
+  assemble.append("");
+  assemble.append("\tjmp\t.L");
+  continueStack.back().push_back({assemble.line, offset});
+}
+```
+
+### 布尔表达式
+
+同样是借鉴 PPT 或现有的语义翻译样本即可。
+
+自己写也很容易，只要把握“短路”的概念即可。
+
+```
+| LAndExp AND EqExp {
+    $$=newNode(L_AND_EXP_TYPE);
+    addChildren($$, $1, $2, $3);
+    assemble.backpatch($1->trueList, $3->quad);
+    $$->trueList = $3->trueList;
+    $$->falseList = merge($1->falseList, $3->falseList);
+    $$->quad = $1->quad;
+}
+```
+
+### 基本运算
+
+如前文所述，对于每个计算节点，在栈上创建临时变量，保存结果，将此时的 `offset` 保存到节点信息中备以后使用。
+
+单目运算例子：`-x`
+
+```
+| MINUS UnaryExp {
+    $$=newNode(UNARY_EXP_TYPE);
+    addChildren($$, $1, $2);
+    if($2->isConst){
+        // copyNode($$, $2);
+        $$->isConst = true;
+        $$->value = -$2->value;
+    }else{
+        assemble.var2reg($2, "%r8d");
+        assemble.append("\tneg %%r8d\n");
+        offset -= 4;
+        assemble.append("\tsubq $4, %%rsp\n");
+        assemble.append("\tmovl %%r8d, %d(%%rbp)\n", offset);
+        $$->offset = offset;
+    }
+}
+```
+
+双目运算例子：`x + y`
+
+```
+| AddExp PLUS MulExp {
+    $$=newNode(ADD_EXP_TYPE);
+    addChildren($$, $1, $2, $3);
+    if($1->isConst && $3->isConst){
+        $$->isConst = true;
+        $$->value = $1->value + $3->value;
+    }else{
+        assemble.var2reg($1, "%r8d");
+        assemble.var2reg($3, "%r9d");
+        assemble.append("\taddl\t%%r9d, %%r8d\n");
+        offset -= 4;
+        assemble.append("\tsubq\t$4, %%rsp\n");
+        assemble.append("\tmovl\t%%r8d, %d(%%rbp)\n", offset);
+        $$->offset = offset;
+    }
 }
 ```
 

@@ -1,0 +1,19 @@
+// 就近符号表
+void func(){
+    int x = 1;
+    {
+        int x = 2;
+        {
+            int x = 3;
+            printf(x);
+        }
+        x = -2;
+        printf(x);
+    }
+    printf(x);
+}
+int x = 0;
+int main(){
+    func();
+    printf(x);
+}
