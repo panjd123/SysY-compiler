@@ -1,0 +1,13 @@
+// a + b problem
+// 局部变量：声明和使用
+// scanf和printf的使用
+// 加法
+
+int main() {
+    int a;
+    int b;
+    scanf(a);
+    scanf(b);
+    int c = a + b;
+    printf(c);
+}
