@@ -53,7 +53,7 @@ f:
 .L2:
 	# enter stmt
 	movl	$1, %eax
-	# 2 test_codes/2.sy:18:18
+	# 1 test_codes/2.sy:18:18
 	addq	$0, %rsp
 	popq	%r9
 	popq	%r8
@@ -135,16 +135,15 @@ main:
 	jmp	.L10
 .L6:
 	# enter stmt
-	# enter stmt
 	subq	$4, %rsp
 	# align stack
 	movl	$2333, %esi
-	# 3 test_codes/2.sy:28:21
+	# 2 test_codes/2.sy:28:21
 	leaq	.LC1(%rip), %rdi
 	movl	$0, %eax
 	call	printf@PLT
 	movl	-12(%rbp), %eax
-	# 3 test_codes/2.sy:29:16
+	# 2 test_codes/2.sy:29:16
 	testl %eax, %eax
 	sete %al
 	movzbl %al, %eax
@@ -153,31 +152,31 @@ main:
 .L7:
 	# enter stmt
 	movl	-12(%rbp), %r8d
-	# 4 test_codes/2.sy:30:24
+	# 2 test_codes/2.sy:30:24
 	movl	$10, %r9d
-	# 4 test_codes/2.sy:30:24
+	# 2 test_codes/2.sy:30:24
 	subl	%r9d, %r8d
 	subq	$4, %rsp
 	movl	%r8d, -24(%rbp)
 	movl	-24(%rbp), %r9d
-	# 4 test_codes/2.sy:30:24
+	# 2 test_codes/2.sy:30:24
 	movl	%r9d, -12(%rbp)
-	# 4 test_codes/2.sy:30:24
+	# 2 test_codes/2.sy:30:24
 	addq	$4, %rsp
 	jmp	.L9
 .L8:
 	# enter stmt
 	movl	-12(%rbp), %r8d
-	# 4 test_codes/2.sy:32:24
+	# 2 test_codes/2.sy:32:24
 	movl	$10, %r9d
-	# 4 test_codes/2.sy:32:24
+	# 2 test_codes/2.sy:32:24
 	addl	%r9d, %r8d
 	subq	$4, %rsp
 	movl	%r8d, -24(%rbp)
 	movl	-24(%rbp), %r9d
-	# 4 test_codes/2.sy:32:24
+	# 2 test_codes/2.sy:32:24
 	movl	%r9d, -12(%rbp)
-	# 4 test_codes/2.sy:32:24
+	# 2 test_codes/2.sy:32:24
 	addq	$4, %rsp
 .L9:
 	addq	$8, %rsp
@@ -185,11 +184,10 @@ main:
 	jmp	.L11
 .L10:
 	# enter stmt
-	# enter stmt
 	subq	$4, %rsp
 	# align stack
 	movl	-12(%rbp), %esi
-	# 3 test_codes/2.sy:35:18
+	# 2 test_codes/2.sy:35:18
 	leaq	.LC1(%rip), %rdi
 	movl	$0, %eax
 	call	printf@PLT
@@ -217,9 +215,9 @@ main:
 .L13:
 	# if <=
 	movl	-20(%rbp), %r8d
-	# 2 test_codes/2.sy:40:19
+	# 1 test_codes/2.sy:40:19
 	movl	$3, %r9d
-	# 2 test_codes/2.sy:40:19
+	# 1 test_codes/2.sy:40:19
 	cmpl	%r9d, %r8d
 	jle	.L15
 	jmp	.L14
@@ -228,30 +226,28 @@ main:
 	addq	$0, %rsp
 	jmp	.L22
 .L15:
-	# enter stmt
 .L16:
 	# if ==
 	movl	-20(%rbp), %r8d
-	# 3 test_codes/2.sy:41:20
+	# 2 test_codes/2.sy:41:20
 	movl	$1, %r9d
-	# 3 test_codes/2.sy:41:20
+	# 2 test_codes/2.sy:41:20
 	cmpl	%r9d, %r8d
 	je	.L17
 	jmp	.L18
 .L17:
 	# enter stmt
-	# enter stmt
 	movl	-20(%rbp), %r8d
-	# 5 test_codes/2.sy:42:23
+	# 3 test_codes/2.sy:42:23
 	movl	$1, %r9d
-	# 5 test_codes/2.sy:42:23
+	# 3 test_codes/2.sy:42:23
 	addl	%r9d, %r8d
 	subq	$4, %rsp
 	movl	%r8d, -28(%rbp)
 	movl	-28(%rbp), %r9d
-	# 5 test_codes/2.sy:42:23
+	# 3 test_codes/2.sy:42:23
 	movl	%r9d, -20(%rbp)
-	# 5 test_codes/2.sy:42:23
+	# 3 test_codes/2.sy:42:23
 	addq	$4, %rsp
 	jmp	.L12
 	addq	$4, %rsp
@@ -261,9 +257,9 @@ main:
 .L19:
 	# if ==
 	movl	-20(%rbp), %r8d
-	# 3 test_codes/2.sy:45:20
+	# 2 test_codes/2.sy:45:20
 	movl	$3, %r9d
-	# 3 test_codes/2.sy:45:20
+	# 2 test_codes/2.sy:45:20
 	cmpl	%r9d, %r8d
 	je	.L20
 	jmp	.L21
@@ -277,21 +273,21 @@ main:
 	subq	$8, %rsp
 	# align stack
 	movl	-20(%rbp), %esi
-	# 3 test_codes/2.sy:47:18
+	# 2 test_codes/2.sy:47:18
 	leaq	.LC1(%rip), %rdi
 	movl	$0, %eax
 	call	printf@PLT
 	movl	-20(%rbp), %r8d
-	# 3 test_codes/2.sy:48:19
+	# 2 test_codes/2.sy:48:19
 	movl	$1, %r9d
-	# 3 test_codes/2.sy:48:19
+	# 2 test_codes/2.sy:48:19
 	addl	%r9d, %r8d
 	subq	$4, %rsp
 	movl	%r8d, -36(%rbp)
 	movl	-36(%rbp), %r9d
-	# 3 test_codes/2.sy:48:19
+	# 2 test_codes/2.sy:48:19
 	movl	%r9d, -20(%rbp)
-	# 3 test_codes/2.sy:48:19
+	# 2 test_codes/2.sy:48:19
 	addq	$12, %rsp
 	addq	$0, %rsp
 	jmp	.L12

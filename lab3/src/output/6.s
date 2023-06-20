@@ -13,12 +13,10 @@ func:
 	# 1 test_codes/6.sy:3:15
 	subq	$4, %rsp
 	movl	%edi, -4(%rbp)
-	# enter stmt
 	movl	$2, %edi
 	# 2 test_codes/6.sy:5:19
 	subq	$4, %rsp
 	movl	%edi, -8(%rbp)
-	# enter stmt
 	movl	$3, %edi
 	# 3 test_codes/6.sy:7:23
 	subq	$4, %rsp

@@ -33,9 +33,9 @@ sum:
 .L2:
 	# if <
 	movl	-4(%rbp), %r8d
-	# 2 test_codes/5.sy:7:17
+	# 1 test_codes/5.sy:7:17
 	movl	40(%rbp), %r9d
-	# 2 test_codes/5.sy:7:17
+	# 1 test_codes/5.sy:7:17
 	cmpl	%r9d, %r8d
 	jl	.L4
 	jmp	.L3
@@ -44,13 +44,12 @@ sum:
 	addq	$0, %rsp
 	jmp	.L10
 .L4:
-	# enter stmt
 	movl	$0, %edi
-	# 3 test_codes/5.sy:8:19
+	# 2 test_codes/5.sy:8:19
 	subq	$4, %rsp
 	movl	%edi, -8(%rbp)
 	movl	$0, %edi
-	# 3 test_codes/5.sy:9:21
+	# 2 test_codes/5.sy:9:21
 	subq	$4, %rsp
 	movl	%edi, -12(%rbp)
 .L5:
@@ -59,9 +58,9 @@ sum:
 .L6:
 	# if <
 	movl	-8(%rbp), %r8d
-	# 4 test_codes/5.sy:10:21
+	# 2 test_codes/5.sy:10:21
 	movl	$4, %r9d
-	# 4 test_codes/5.sy:10:21
+	# 2 test_codes/5.sy:10:21
 	cmpl	%r9d, %r8d
 	jl	.L8
 	jmp	.L7
@@ -70,44 +69,43 @@ sum:
 	addq	$0, %rsp
 	jmp	.L9
 .L8:
-	# enter stmt
 	subq	$4, %rsp
 	movl	$0, -16(%rbp)
 	movl	-8(%rbp), %r8d
-	# 5 test_codes/5.sy:11:33
+	# 3 test_codes/5.sy:11:33
 	imull	$1, %r8d
 	addl	-16(%rbp), %r8d
 	movl	%r8d, -16(%rbp)
 	movl	-4(%rbp), %r8d
-	# 5 test_codes/5.sy:11:33
+	# 3 test_codes/5.sy:11:33
 	imull	$4, %r8d
 	addl	-16(%rbp), %r8d
 	movl	%r8d, -16(%rbp)
 	movl	-12(%rbp), %r8d
-	# 5 test_codes/5.sy:11:33
+	# 3 test_codes/5.sy:11:33
 	movl	-16(%rbp), %ebx
 	cltq
 	movq	32(%rbp), %r10
 	movl	(%r10, %rbx, 4), %r9d
-	# 5 test_codes/5.sy:11:33
+	# 3 test_codes/5.sy:11:33
 	addl	%r9d, %r8d
 	subq	$4, %rsp
 	movl	%r8d, -20(%rbp)
 	movl	-20(%rbp), %r9d
-	# 5 test_codes/5.sy:11:33
+	# 3 test_codes/5.sy:11:33
 	movl	%r9d, -12(%rbp)
-	# 5 test_codes/5.sy:11:33
+	# 3 test_codes/5.sy:11:33
 	movl	-8(%rbp), %r8d
-	# 5 test_codes/5.sy:12:23
+	# 3 test_codes/5.sy:12:23
 	movl	$1, %r9d
-	# 5 test_codes/5.sy:12:23
+	# 3 test_codes/5.sy:12:23
 	addl	%r9d, %r8d
 	subq	$4, %rsp
 	movl	%r8d, -24(%rbp)
 	movl	-24(%rbp), %r9d
-	# 5 test_codes/5.sy:12:23
+	# 3 test_codes/5.sy:12:23
 	movl	%r9d, -8(%rbp)
-	# 5 test_codes/5.sy:12:23
+	# 3 test_codes/5.sy:12:23
 	addq	$12, %rsp
 	addq	$0, %rsp
 	jmp	.L5
@@ -116,21 +114,21 @@ sum:
 	subq	$4, %rsp
 	# align stack
 	movl	-12(%rbp), %esi
-	# 3 test_codes/5.sy:14:20
+	# 2 test_codes/5.sy:14:20
 	leaq	.LC1(%rip), %rdi
 	movl	$0, %eax
 	call	printf@PLT
 	movl	-4(%rbp), %r8d
-	# 3 test_codes/5.sy:15:19
+	# 2 test_codes/5.sy:15:19
 	movl	$1, %r9d
-	# 3 test_codes/5.sy:15:19
+	# 2 test_codes/5.sy:15:19
 	addl	%r9d, %r8d
 	subq	$4, %rsp
 	movl	%r8d, -20(%rbp)
 	movl	-20(%rbp), %r9d
-	# 3 test_codes/5.sy:15:19
+	# 2 test_codes/5.sy:15:19
 	movl	%r9d, -4(%rbp)
-	# 3 test_codes/5.sy:15:19
+	# 2 test_codes/5.sy:15:19
 	addq	$16, %rsp
 	addq	$0, %rsp
 	jmp	.L1
@@ -158,9 +156,9 @@ fill:
 .L12:
 	# if <
 	movl	-4(%rbp), %r8d
-	# 2 test_codes/5.sy:20:17
+	# 1 test_codes/5.sy:20:17
 	movl	40(%rbp), %r9d
-	# 2 test_codes/5.sy:20:17
+	# 1 test_codes/5.sy:20:17
 	cmpl	%r9d, %r8d
 	jl	.L14
 	jmp	.L13
@@ -169,9 +167,8 @@ fill:
 	addq	$0, %rsp
 	jmp	.L20
 .L14:
-	# enter stmt
 	movl	$0, %edi
-	# 3 test_codes/5.sy:21:19
+	# 2 test_codes/5.sy:21:19
 	subq	$4, %rsp
 	movl	%edi, -8(%rbp)
 .L15:
@@ -180,9 +177,9 @@ fill:
 .L16:
 	# if <
 	movl	-8(%rbp), %r8d
-	# 4 test_codes/5.sy:22:21
+	# 2 test_codes/5.sy:22:21
 	movl	$4, %r9d
-	# 4 test_codes/5.sy:22:21
+	# 2 test_codes/5.sy:22:21
 	cmpl	%r9d, %r8d
 	jl	.L18
 	jmp	.L17
@@ -191,65 +188,64 @@ fill:
 	addq	$0, %rsp
 	jmp	.L19
 .L18:
-	# enter stmt
 	subq	$4, %rsp
 	movl	$0, -12(%rbp)
 	movl	-8(%rbp), %r8d
-	# 5 test_codes/5.sy:23:22
+	# 3 test_codes/5.sy:23:22
 	imull	$1, %r8d
 	addl	-12(%rbp), %r8d
 	movl	%r8d, -12(%rbp)
 	movl	-4(%rbp), %r8d
-	# 5 test_codes/5.sy:23:22
+	# 3 test_codes/5.sy:23:22
 	imull	$4, %r8d
 	addl	-12(%rbp), %r8d
 	movl	%r8d, -12(%rbp)
 	movl	-4(%rbp), %r8d
-	# 5 test_codes/5.sy:23:27
+	# 3 test_codes/5.sy:23:27
 	neg %r8d
 	subq $4, %rsp
 	movl %r8d, -16(%rbp)
 	movl	-16(%rbp), %r8d
-	# 5 test_codes/5.sy:23:30
+	# 3 test_codes/5.sy:23:30
 	movl	-8(%rbp), %r9d
-	# 5 test_codes/5.sy:23:30
+	# 3 test_codes/5.sy:23:30
 	imull	%r8d, %r9d
 	subq	$4, %rsp
 	movl	%r9d, -20(%rbp)
 	movl	-20(%rbp), %r9d
-	# 5 test_codes/5.sy:23:30
+	# 3 test_codes/5.sy:23:30
 	movl	-12(%rbp), %ebx
 	cltq
 	movq	32(%rbp), %r10
 	movl	%r9d, (%r10, %rbx, 4)
-	# 5 test_codes/5.sy:23:30
+	# 3 test_codes/5.sy:23:30
 	movl	-8(%rbp), %r8d
-	# 5 test_codes/5.sy:24:23
+	# 3 test_codes/5.sy:24:23
 	movl	$1, %r9d
-	# 5 test_codes/5.sy:24:23
+	# 3 test_codes/5.sy:24:23
 	addl	%r9d, %r8d
 	subq	$4, %rsp
 	movl	%r8d, -24(%rbp)
 	movl	-24(%rbp), %r9d
-	# 5 test_codes/5.sy:24:23
+	# 3 test_codes/5.sy:24:23
 	movl	%r9d, -8(%rbp)
-	# 5 test_codes/5.sy:24:23
+	# 3 test_codes/5.sy:24:23
 	addq	$16, %rsp
 	addq	$0, %rsp
 	jmp	.L15
 .L19:
 	# while end
 	movl	-4(%rbp), %r8d
-	# 3 test_codes/5.sy:26:19
+	# 2 test_codes/5.sy:26:19
 	movl	$1, %r9d
-	# 3 test_codes/5.sy:26:19
+	# 2 test_codes/5.sy:26:19
 	addl	%r9d, %r8d
 	subq	$4, %rsp
 	movl	%r8d, -12(%rbp)
 	movl	-12(%rbp), %r9d
-	# 3 test_codes/5.sy:26:19
+	# 2 test_codes/5.sy:26:19
 	movl	%r9d, -4(%rbp)
-	# 3 test_codes/5.sy:26:19
+	# 2 test_codes/5.sy:26:19
 	addq	$8, %rsp
 	addq	$0, %rsp
 	jmp	.L11
