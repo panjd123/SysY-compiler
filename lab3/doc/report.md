@@ -562,6 +562,87 @@ while 略有不同，最主要的问题在于如果仍然沿用 if 的结构，C
 
 ## 附录
 
+### 自定义测验代码
+
+以下代码的运行效果均在检查时演示过。
+
+```c
+// 传递数组
+// 传递部分数组
+// 复杂的数组声明
+const int N = 3, M = 4;
+int sum(int x[][M], int n){
+    int i = 0;
+    while(i < n){
+        int j = 0;
+        int sum = 0;
+        while(j < M){
+            sum = sum + x[i][j];
+            j = j + 1;
+        }
+        printf(sum);
+        i = i + 1;
+    }
+}
+void fill(int x[][M], int n){
+    int i = 0;
+    while(i < n){
+        int j = 0;
+        while(j < M){
+            x[i][j] = -i * j;
+            j = j + 1;
+        }
+        i = i + 1;
+    }
+}
+int main(){
+    const int tmp[4] = {1, 2, 3, 4};
+    int a[2][N][M] =    {tmp[0], tmp[1], tmp[2], tmp[3],
+                         2*tmp[0], 2*tmp[1], 2*tmp[2], 2*tmp[3],
+                         3, 6, 9, 12,
+                         -1};
+    sum(a[0], N);
+    sum(a[1], N);
+    fill(a[1], N);
+    sum(a[1], N);
+}
+```
+
+```
+// 就近符号表
+void func(){
+    int x = 1;
+    {
+        int x = 2;
+        {
+            int x = 3;
+            printf(x);
+        }
+        x = -2;
+        printf(x);
+    }
+    printf(x);
+}
+int x = 0;
+int main(){
+    func();
+    printf(x);
+}
+```
+
+```
+// 常数组传参演示
+void func(int x[], int i){
+    printf(x[i]);
+}
+const int number[10] = {0,1,2,3,4,5,6,7,8,9};
+int main(){
+    func(number, 0);
+    func(number, 5);
+    func(number, 6);
+}
+```
+
 ### 之前阶段的更新内容
 
 因为允许使用 cpp，所以重构了之前的代码
